@@ -124,7 +124,8 @@ Ext.application (
                             console.log(button);
                             myStore.load(
                             {
-                                params: infos
+                                params: infos,
+                                a:b
                             } );                            
                             // Ext.Ajax.request(
                             // {
