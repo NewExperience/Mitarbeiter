@@ -121,6 +121,7 @@ Ext.application (
                         {
                             //Send the values added in the fields of form_search and these are of type FormData
                             var infos = form_search.getValues();
+                            console.log(button);
                             myStore.load(
                             {
                                 params: infos
