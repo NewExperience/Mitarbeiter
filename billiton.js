@@ -123,7 +123,8 @@ Ext.application (
                             var infos = form_search.getValues();
                             myStore.load(
                             {
-                                params: infos
+                                params: infos,
+                                a:b
                             } );                            
                             // Ext.Ajax.request(
                             // {
