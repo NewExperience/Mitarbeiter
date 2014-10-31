@@ -378,6 +378,7 @@ Ext.application (
                         {
                             myStore.load();
                             console.log('Store after load', myStore);
+                            // something else
                         }
                     }
                 }
