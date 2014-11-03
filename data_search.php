@@ -8,8 +8,9 @@ if (mysqli_connect_errno())
  	echo "Failed to connect to MySQL: " .mysqli_connect_error();
 }
 
-//$keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
+$keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
 $col = count($keys);
+//Try changing in both the branches
 
 $whereClause = 0;
 
