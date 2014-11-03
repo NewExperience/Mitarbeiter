@@ -1,13 +1,15 @@
 <?php
 
-//Take the content of the table from my DataBase, then I create the array $data 
+//Take the content of the table from my DataBase, then I create the array $data
 //and at the end I pass to $table_data.js doing and echo of the json object
 $con = mysqli_connect("localhost","root","123456","Federica");
-if (mysqli_connect_errno()) 
+if (mysqli_connect_errno())
 {
  	echo "Failed to connect to MySQL: " .mysqli_connect_error();
 }
 
+//Another stupid array!
+$keys = array ("Hallo", "ich", "bin", "Fede");
 $keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
 $col = count($keys);
 
@@ -16,7 +18,7 @@ $col = count($keys);
 //I do this using regular expressions and the function preg_match() to do the control
 $exp_string = '/[a-z]/i';
 $exp_datum = '/\d{2}\/\d{2}\/\d{4}/i';
-if ( (preg_match($exp_string, $_POST['vorname']) == 1) 
+if ( (preg_match($exp_string, $_POST['vorname']) == 1)
 	&& (preg_match($exp_string, $_POST['name']) == 1)
 	&& (preg_match($exp_datum, $_POST['datum']) == 1) )
 {
