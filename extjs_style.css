@@ -1,0 +1,23 @@
+.vorname_cls .x-grid-item
+{
+	color: red;
+}
+
+.my-red-row
+{
+	color: red;
+}
+
+.my-header
+{
+	background-color: lightblue;
+	height: 45px;
+	font-size: 23px;
+}
+
+.my-header .x-title-text
+{
+	font-size: 23px;
+	text-align: center;
+	color: midnightblue;
+}
