@@ -1,17 +1,15 @@
 <?php
 
-//Take the content of the table from my DataBase, then I create the array $data 
+//Take the content of the table from my DataBase, then I create the array $data
 //and at the end I pass to $table_data.js doing and echo of the json object
 $con = mysqli_connect("localhost","root","123456","Federica");
-if (mysqli_connect_errno()) 
+if (mysqli_connect_errno())
 {
  	echo "Failed to connect to MySQL: " .mysqli_connect_error();
 }
 
-$keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
+//$keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
 $col = count($keys);
-
-// var_dump($_POST);
 
 $whereClause = 0;
 
