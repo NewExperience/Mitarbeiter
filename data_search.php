@@ -10,7 +10,6 @@ if (mysqli_connect_errno())
 
 $keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
 $col = count($keys);
-$keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
 
 $whereClause = 0;
 
