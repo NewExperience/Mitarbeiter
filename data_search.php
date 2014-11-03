@@ -8,8 +8,7 @@ if (mysqli_connect_errno())
  	echo "Failed to connect to MySQL: " .mysqli_connect_error();
 }
 
-//Array commented!!!
-// $keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
+$keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
 $col = count($keys);
 
 $whereClause = 0;
