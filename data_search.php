@@ -11,7 +11,8 @@ if (mysqli_connect_errno())
 $keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
 $col = count($keys);
 
-$whereClause = 0;
+//Comment this variable
+// $whereClause = 0;
 
 $query = "SELECT ";
 for ($i=0; $i<$col-1; $i++)
