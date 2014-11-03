@@ -276,7 +276,7 @@ Ext.application (
         var container = Ext.create ('Ext.panel.Panel',
         {
             renderTo: Ext.getBody(),
-            title: 'Billiton',
+            title: 'Neue Firma',
             header:
             {
                 cls: 'my-header'
