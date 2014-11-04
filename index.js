@@ -126,22 +126,6 @@ Ext.application (
                             {
                                 params: infos
                             } );
-                            // Ext.Ajax.request(
-                            // {
-                            //     url: 'data_search.php',
-                            //     method: 'POST',
-                            //     params: infos,
-                            //     success: function(response, opts)
-                            //     {
-                            //         var resp = Ext.decode(response.responseText);
-                            //         myStore.loadData(resp);
-                            //         // myStore.load();
-                            //     },
-                            //     failure: function(response, opts)
-                            //     {
-                            //         Ext.Msg.alert('Server-side failure with status code ' + response.status);
-                            //     }
-                            // } );
                         }
                     }
                 }
@@ -324,10 +308,6 @@ Ext.application (
                 store: myStore,
                 name: 'table',
                 layout: 'fit',
-                // style:
-                // {
-                //     top: 360
-                // },
                 columns:
                 {
                     items:
@@ -344,15 +324,6 @@ Ext.application (
                             text: 'Geburtsdatum',
                             dataIndex: 'geburtsdatum',
                             renderer: Ext.util.Format.dateRenderer('d.m.Y')
-                            // function(value)
-                            // {
-                            //     if (value=='0000-00-00')
-                            //     {
-                            //         return '';
-                            //     }
-                            //     date = Ext.util.Format.date(value, 'd.m.Y');
-                            //     return date;
-                            // }
                         },
                         {
                             text: 'Geburtsort',
