@@ -21,3 +21,10 @@
 	text-align: center;
 	color: midnightblue;
 }
+
+.my-window
+{
+	height: 300px;
+    width: 500px;
+    top: 520px;
+}

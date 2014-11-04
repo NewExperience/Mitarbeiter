@@ -256,6 +256,74 @@ Ext.application (
             ]
         } );
 
+        //The window with the form to be shown when I right-click on a row
+        var myWindow = Ext.create ('Ext.window.Window',
+        {
+            title: '&Auml;nderungen',
+            layout: 'fit',
+            height: 300,
+            width: 500,
+            // shadow: false,
+            // cls: 'my-window',
+            items:
+            // [
+            //     form_add
+            // ]
+            {
+                xtype: 'form',
+                name: 'form_window',
+                // border: false,
+                items:
+                [
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: 'Vorname',
+                        name: 'vorname',
+                        margin: '15, 10, 10, 15'
+                    },
+                    {
+                        xtype: 'textfield',
+                        fieldLabel: 'Name',
+                        name: 'name',
+                        margin: '15, 10, 10, 15'
+                    },
+                    {
+                        xtype: 'datefield',
+                        fieldLabel: 'Datum',
+                        name: 'datum',
+                        maxValue: new Date(),
+                        margin: '15, 10, 10, 15'
+                    },
+                    {
+                        xtype: 'combobox',
+                        fieldLabel: 'St&auml;dte',
+                        name: 'ort',
+                        store: comboStore,
+                        queryMode: 'remote',
+                        displayField: 'city',
+                        valueField: 'city',
+                        margin: '15, 10, 10, 15'
+                    }
+                ]
+            },
+            buttons:
+            [
+                {
+                    text: 'Ok',
+                    listeners:
+                    {
+                        click: function(button)
+                        {
+                            //Send the values added in the fields of the form and these are of type FormData
+                            var form = myWindow.down('form');
+                            var infos = form.getForm().getValues();
+                            console.log('Infos', infos);
+                        }
+                    }
+                }
+            ]
+        } );
+
         //The container has inside: the table, the submit botton and other objects
         var container = Ext.create ('Ext.panel.Panel',
         {
@@ -287,7 +355,6 @@ Ext.application (
             },
             items:
             [
-                // header,
             {   //Definition of the tab which contains the two forms (one for searching and the other for adding)
                 xtype: 'tabpanel',
                 title: 'Um mit der Tabelle zu bearbeiten',
@@ -337,12 +404,19 @@ Ext.application (
                 },
                 width: 450,
                 height: 300,
-                viewConfig:
+                viewConfig:  //To give red colour to the Mitarbeiter without a Geburtsort added
                 {
                     getRowClass: function(record, index)
                     {
                         if (record.get('geburtsort')==='')
                         return 'my-red-row';
+                    }
+                },
+                listeners:
+                {
+                    itemcontextmenu: function(grid, record)
+                    {
+                        myWindow.show();
                     }
                 },
                 fbar:
