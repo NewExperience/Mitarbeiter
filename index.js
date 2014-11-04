@@ -337,6 +337,14 @@ Ext.application (
                 },
                 width: 450,
                 height: 300,
+                viewConfig:
+                {
+                    getRowClass: function(record, index)
+                    {
+                        if (record.get('geburtsort')==='')
+                        return 'my-red-row';
+                    }
+                },
                 fbar:
                 [
                 {
