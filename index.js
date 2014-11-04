@@ -40,7 +40,7 @@ Ext.application (
                 }
             ],
             //Doesn't directly load the store (it works because the store is created dinamically)
-            autoLoad: false
+            autoLoad: true
         } );
 
         //Definition of the store for the cities listed in the ComboBox
@@ -121,7 +121,6 @@ Ext.application (
                         {
                             //Send the values added in the fields of form_search and these are of type FormData
                             var infos = form_search.getValues();
-                            console.log(button);
                             myStore.load(
                             {
                                 params: infos
@@ -257,6 +256,7 @@ Ext.application (
         } );
 
         //The window with the form to be shown when I right-click on a row
+        //I have to pass to myWindow the infos written in the row that I clicked
         var myWindow = Ext.create ('Ext.window.Window',
         {
             title: '&Auml;nderungen',
@@ -266,12 +266,8 @@ Ext.application (
             // shadow: false,
             // cls: 'my-window',
             items:
-            // [
-            //     form_add
-            // ]
             {
                 xtype: 'form',
-                name: 'form_window',
                 // border: false,
                 items:
                 [
@@ -314,14 +310,16 @@ Ext.application (
                     {
                         click: function(button)
                         {
-                            //Send the values added in the fields of the form and these are of type FormData
                             var form = myWindow.down('form');
-                            var infos = form.getForm().getValues();
-                            console.log('Infos', infos);
+                            // var form.getForm().setValues('vorname') = myParams.vorname;
                         }
                     }
                 }
             ]
+            // listeners:
+            // {
+            //     'show': function(test)
+            // }
         } );
 
         //The container has inside: the table, the submit botton and other objects
@@ -349,7 +347,7 @@ Ext.application (
                 labelWidth: 200,
                 style:
                 {
-                    padding: '10px',
+                    padding: '10px'
                     // position: 'absolute'
                 }
             },
@@ -414,9 +412,20 @@ Ext.application (
                 },
                 listeners:
                 {
-                    itemcontextmenu: function(grid, record)
+                    itemcontextmenu: function(grid, record, item, index, event)
                     {
-                        myWindow.show();
+                        console.log('record.data',record.data);
+                        //Change format to the date in record.data->from 'Y-m-d' to 'm/d/Y'
+                        var date = record.data.geburtsdatum;
+                        var parts = date.split('-');
+                        var year = parts[0];
+                        var month = parts[1];
+                        var day = parts[2];
+                        var date = month + '/' + day + '/' + year;
+                        console.log('date_formatted',date);
+                        var myForm = myWindow.down('form');
+                        myForm.loadRecord(record);
+                        myWindow.showAt(event.getXY());
                     }
                 },
                 fbar:
