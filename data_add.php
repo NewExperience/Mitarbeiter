@@ -8,6 +8,7 @@ if (mysqli_connect_errno())
  	echo "Failed to connect to MySQL: " .mysqli_connect_error();
 }
 
+//This is the only array needed!
 $keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
 $col = count($keys);
 
