@@ -297,6 +297,9 @@ Ext.application (
                         queryMode: 'remote',
                         displayField: 'city',
                         valueField: 'city',
+                        editable: true,
+                        typeAhead: true,
+                        selectOnFocus: true,
                         margin: '15, 10, 10, 15'
                     }
                 ]
@@ -421,6 +424,17 @@ Ext.application (
                         if (record.get('Geburtsort')==='')
                         return 'my-red-row';
                     }
+                    //I could write an alert if the Mitarbeiter is too old
+                    // {
+                    //     var datum = record.get('Geburtsdatum');
+                    //     var parts = datum.split('-');
+                    //     var datum_obj = new Date(parts[0], parts[1], parts[0]);
+                    //     console.log('datum_obj',datum_obj);
+                    //     var year = getFullYear(datum_obj);
+                    //     console.log('year',year);
+                    //     if (year<1940)
+                    //     Ext.Msg.alert("Mitarbeiter ist zu alt");
+                    // }
                 },
                 listeners:
                 {
