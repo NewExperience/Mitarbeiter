@@ -6,25 +6,17 @@ if (mysqli_connect_errno())
  	echo "Failed to connect to MySQL: " .mysqli_connect_error();
 }
 
-$keys = array ("vorname", "name", "geburtsdatum", "geburtsort");
-$col = count($keys);
-
 $whereClause = 0;
 
-$query = "SELECT ";
-for ($i=0; $i<$col-1; $i++)
-{
-	$query .= $keys[$i] .', ';
-}
-$query .= $keys[$col-1] ." FROM Mitarbeiter";
+$query = "SELECT * FROM Mitarbeiter";
 
 //The character % means that any other string can be found in the place where % is
 if (!empty($_POST['vorname']))
 {
-	$query .= " WHERE LOWER(vorname) LIKE '" .$_POST['vorname'] ."%'";
+	$query .= " WHERE LOWER(Vorname) LIKE '" .$_POST['Vorname'] ."%'";
 	$whereClause++;
 }
-if (!empty($_POST['name']))
+if (!empty($_POST['Name']))
 {
 	if ($whereClause>0)  //I've already written other WHERE clauses
 	{
@@ -34,13 +26,13 @@ if (!empty($_POST['name']))
 	{
 		$query .= " WHERE ";
 	}
-	$query .= "LOWER(name) LIKE '" .$_POST['name'] ."%'";
+	$query .= "LOWER(Name) LIKE '" .$_POST['Name'] ."%'";
 	$whereClause++;
 }
-if (!empty($_POST['datum']))
+if (!empty($_POST['Geburtsdatum']))
 {
 	//I want the date written with the format 'YYYY-mm-dd'
-	$date = date_create_from_format('m/d/Y', $_POST['datum']);
+	$date = date_create_from_format('m/d/Y', $_POST['Geburtsdatum']);
 	$date = date_format($date, 'Y-m-d');
 	if ($whereClause>0)  //I've already written other WHERE clauses
 	{
@@ -50,7 +42,7 @@ if (!empty($_POST['datum']))
 	{
 		$query .= " WHERE ";
 	}
-	$query .= "geburtsdatum = '" .$date ."'";
+	$query .= "Geburtsdatum = '" .$date ."'";
 	$whereClause++;
 }
 if (!empty($_POST['ort']))
@@ -63,10 +55,8 @@ if (!empty($_POST['ort']))
 	{
 		$query .= " WHERE ";
 	}
-	$query .= "geburtsort = '" .$_POST['ort'] ."'";
+	$query .= "Geburtsort = '" .$_POST['Geburtsort'] ."'";
 }
-
-// var_dump($query);
 
 $result = mysqli_query($con, $query);
 

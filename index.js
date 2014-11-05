@@ -19,28 +19,28 @@ Ext.application (
                 },
                 actionMethods:
                 {
-                    read : 'POST'
+                    read   : 'POST'
                 }
             },
             fields:
             [
                 {
-                    name: 'vorname'
+                    name: 'Vorname'
                 },
                 {
-                    name: 'name'
+                    name: 'Name'
                 },
                 {
-                    name: 'geburtsdatum',
+                    name: 'Geburtsdatum',
                     type: 'date',
                     dateFormat: 'd.m.Y'
                 },
                 {
-                    name: 'geburtsort'
+                    name: 'Geburtsort'
                 }
             ],
             //Doesn't directly load the store (it works because the store is created dinamically)
-            autoLoad: true
+            autoLoad: false
         } );
 
         //Definition of the store for the cities listed in the ComboBox
@@ -75,12 +75,12 @@ Ext.application (
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Vorname',
-                            name: 'vorname'
+                            name: 'Vorname'
                         },
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Name',
-                            name: 'name',
+                            name: 'Name',
                             top: 10
                         }
                     ]
@@ -94,13 +94,13 @@ Ext.application (
                         {
                             xtype: 'datefield',
                             fieldLabel: 'Datum',
-                            name: 'datum',
+                            name: 'Geburtsdatum',
                             maxValue: new Date()  //Date that can be added is maximum the current date
                         },
                         {
                             xtype: 'combobox',
                             fieldLabel: 'St&auml;dte',
-                            name: 'ort',
+                            name: 'Geburtsort',
                             store: comboStore,
                             queryMode: 'remote',  //In which way the comboStore is token:
                                                   //'remote' means that comboStore is loaded dinamically by ComboBox
@@ -139,23 +139,23 @@ Ext.application (
             //For this purpose use regular expressions
             var exp_string = new RegExp(/[a-z]/i);
             var exp_datum = new RegExp(/\d{2}\/\d{2}\/\d{4}/i);
-            if (!exp_string.test(infos.vorname))
+            if (!exp_string.test(infos.Vorname))
             {
                 Ext.Msg.alert('The added Vorname is not valid');
                 return false;
             }
-            if (!exp_string.test(infos.name))
+            if (!exp_string.test(infos.Name))
             {
                 Ext.Msg.alert('The added Name is not valid');
                 return false;
             }
-            if (!exp_datum.test(infos.datum))
+            if (!exp_datum.test(infos.Geburtsdatum))
             {
                 Ext.Msg.alert('The added Geburtsdatum is not valid');
                 return false;
             }
-            return ( (exp_string.test(infos.vorname)) && (exp_string.test(infos.name))
-                    && (exp_datum.test(infos.datum)) );
+            return ( (exp_string.test(infos.Vorname)) && (exp_string.test(infos.Name))
+                    && (exp_datum.test(infos.Geburtsdatum)) );
         };
 
         //Definition of the form to do a search request to the DB
@@ -176,12 +176,12 @@ Ext.application (
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Vorname',
-                            name: 'vorname'
+                            name: 'Vorname'
                         },
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Name',
-                            name: 'name'
+                            name: 'Name'
                         }
                     ]
                 },
@@ -194,13 +194,13 @@ Ext.application (
                         {
                             xtype: 'datefield',
                             fieldLabel: 'Datum',
-                            name: 'datum',
+                            name: 'Geburtsdatum',
                             maxValue: new Date()  //Date that can be added is maximum the current date
                         },
                         {
                             xtype: 'combobox',
                             fieldLabel: 'St&auml;dte',
-                            name: 'ort',
+                            name: 'Geburtsort',
                             store: comboStore,
                             queryMode: 'remote',  //In which way the comboStore is token:
                                                   //'remote' means that comboStore is loaded dinamically by ComboBox
@@ -229,9 +229,8 @@ Ext.application (
                                     params: infos,
                                     success: function(response, opts)
                                     {
-                                        var resp = Ext.decode(response.responseText);
                                         myStore.load();
-                                        console.log('Store loaded after giving informations', myStore);
+                                        // console.log('Store loaded after giving informations', myStore);
                                     },
                                     failure: function(response, opts)
                                     {
@@ -263,7 +262,7 @@ Ext.application (
             layout: 'fit',
             height: 300,
             width: 500,
-            // shadow: false,
+            closeAction: 'hide', //It means that I can reuse the window
             // cls: 'my-window',
             items:
             {
@@ -274,26 +273,26 @@ Ext.application (
                     {
                         xtype: 'textfield',
                         fieldLabel: 'Vorname',
-                        name: 'vorname',
+                        name: 'Vorname',
                         margin: '15, 10, 10, 15'
                     },
                     {
                         xtype: 'textfield',
                         fieldLabel: 'Name',
-                        name: 'name',
+                        name: 'Name',
                         margin: '15, 10, 10, 15'
                     },
                     {
                         xtype: 'datefield',
                         fieldLabel: 'Datum',
-                        name: 'datum',
+                        name: 'Geburtsdatum',
                         maxValue: new Date(),
                         margin: '15, 10, 10, 15'
                     },
                     {
                         xtype: 'combobox',
                         fieldLabel: 'St&auml;dte',
-                        name: 'ort',
+                        name: 'Geburtsort',
                         store: comboStore,
                         queryMode: 'remote',
                         displayField: 'city',
@@ -311,15 +310,28 @@ Ext.application (
                         click: function(button)
                         {
                             var myForm = myWindow.down('form');
-                            // var form.getForm().setValues('vorname') = myParams.vorname;
+                            var infos = myForm.getForm().getValues();
+                            //I add to the infos object the id field
+                            infos.ID = myWindow.params.id;
+                            Ext.Ajax.request(
+                            {
+                                url: 'data_update.php',
+                                method: 'POST',
+                                params: infos,
+                                success: function(response, opts)
+                                {
+                                    myStore.load();
+                                    // console.log('Store loaded after giving informations', myStore);
+                                },
+                                failure: function(response, opts)
+                                {
+                                    Ext.Msg.alert('Server-side failure with status code ' + response.status);
+                                }
+                            } );
                         }
                     }
                 }
             ]
-            // listeners:
-            // {
-            //     'show': function(test)
-            // }
         } );
 
         //The container has inside: the table, the submit botton and other objects
@@ -379,20 +391,20 @@ Ext.application (
                     [
                         {
                             text: 'Vorname',
-                            dataIndex: 'vorname'
+                            dataIndex: 'Vorname'
                         },
                         {
                             text: 'Name',
-                            dataIndex: 'name'
+                            dataIndex: 'Name'
                         },
                         {
                             text: 'Geburtsdatum',
-                            dataIndex: 'geburtsdatum',
+                            dataIndex: 'Geburtsdatum',
                             renderer: Ext.util.Format.dateRenderer('d.m.Y')
                         },
                         {
                             text: 'Geburtsort',
-                            dataIndex: 'geburtsort'
+                            dataIndex: 'Geburtsort'
                         }
                     ],
                     defaults:
@@ -406,7 +418,7 @@ Ext.application (
                 {
                     getRowClass: function(record, index)
                     {
-                        if (record.get('geburtsort')==='')
+                        if (record.get('Geburtsort')==='')
                         return 'my-red-row';
                     }
                 },
@@ -418,10 +430,13 @@ Ext.application (
                         myForm.loadRecord(record);
                         //Insertion of the date and of the ort not directly, as for vorname and name
                         //because the type of the field isn't textfield
-                        var date = record.get('geburtsdatum');
-                        myForm.getForm().findField('datum').setValue(date);
-                        var ort = record.get('geburtsort');
-                        myForm.getForm().findField('ort').setValue(ort);
+                        var date = record.get('Geburtsdatum');
+                        myForm.getForm().findField('Geburtsdatum').setValue(date);
+                        var ort = record.get('Geburtsort');
+                        myForm.getForm().findField('Geburtsort').setValue(ort);
+                        var ID = record.get('ID');
+                        //I send this ID to the window as a parameter
+                        myWindow.params = { id: ID };
                         myWindow.showAt(event.getXY());
                     }
                 },
@@ -435,7 +450,6 @@ Ext.application (
                         click: function(button)
                         {
                             myStore.load();
-                            console.log('Store after load', myStore);
                         }
                     }
                 }
