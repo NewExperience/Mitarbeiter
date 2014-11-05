@@ -11,7 +11,7 @@ $whereClause = 0;
 $query = "SELECT * FROM Mitarbeiter";
 
 //The character % means that any other string can be found in the place where % is
-if (!empty($_POST['vorname']))
+if (!empty($_POST['Vorname']))
 {
 	$query .= " WHERE LOWER(Vorname) LIKE '" .$_POST['Vorname'] ."%'";
 	$whereClause++;
@@ -45,7 +45,7 @@ if (!empty($_POST['Geburtsdatum']))
 	$query .= "Geburtsdatum = '" .$date ."'";
 	$whereClause++;
 }
-if (!empty($_POST['ort']))
+if (!empty($_POST['Geburtsort']))
 {
 	if ($whereClause>0)  //I've already written other WHERE clauses
 	{
