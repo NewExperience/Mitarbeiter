@@ -310,7 +310,7 @@ Ext.application (
                     {
                         click: function(button)
                         {
-                            var form = myWindow.down('form');
+                            var myForm = myWindow.down('form');
                             // var form.getForm().setValues('vorname') = myParams.vorname;
                         }
                     }
@@ -414,17 +414,14 @@ Ext.application (
                 {
                     itemcontextmenu: function(grid, record, item, index, event)
                     {
-                        console.log('record.data',record.data);
-                        //Change format to the date in record.data->from 'Y-m-d' to 'm/d/Y'
-                        var date = record.data.geburtsdatum;
-                        var parts = date.split('-');
-                        var year = parts[0];
-                        var month = parts[1];
-                        var day = parts[2];
-                        var date = month + '/' + day + '/' + year;
-                        console.log('date_formatted',date);
                         var myForm = myWindow.down('form');
                         myForm.loadRecord(record);
+                        //Insertion of the date and of the ort not directly, as for vorname and name
+                        //because the type of the field isn't textfield
+                        var date = record.get('geburtsdatum');
+                        myForm.getForm().findField('datum').setValue(date);
+                        var ort = record.get('geburtsort');
+                        myForm.getForm().findField('ort').setValue(ort);
                         myWindow.showAt(event.getXY());
                     }
                 },
