@@ -465,6 +465,20 @@ Ext.application (
                         //I send this ID to the window as a parameter
                         myWindow.params = { id: ID };
                         myWindow.showAt(event.getXY());
+                    },
+                    //Event that manages the click on a column's title about which I've to sort
+                    //I wouldn't need it because it's done by default, but if I specify
+                    //I can manage this event with the search request
+                    headerclick: function(column)
+                    {
+                        var infos = form_search.getForm().getValues();
+                        //Add start and limit as params to send how many elements per page has to be shown
+                        infos.start = 0;
+                        infos.limit = itemsPerPage;
+                        myStore.load(
+                        {
+                            params: infos
+                        } );
                     }
                 },
                 fbar:
