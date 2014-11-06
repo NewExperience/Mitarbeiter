@@ -6,9 +6,6 @@ if (mysqli_connect_errno())
  	echo "Failed to connect to MySQL: " .mysqli_connect_error();
 }
 
-$keys = array ("Vorname", "Name", "Geburtsdatum", "Geburtsort");
-$col = count($keys);
-
 $query = "UPDATE Mitarbeiter SET";
 //Change only those values (for Vorname, Name and Geburtsdatum) that aren't empty,
 //because they have always to be written

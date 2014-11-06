@@ -348,7 +348,6 @@ Ext.application (
                                 success: function(response, opts)
                                 {
                                     myStore.load();
-                                    // console.log('Store loaded after giving informations', myStore);
                                 },
                                 failure: function(response, opts)
                                 {
