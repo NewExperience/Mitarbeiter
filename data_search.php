@@ -88,14 +88,16 @@ $totalItems = count($items);
 
 //Split all the items regarding the limit parameter,
 //so that each page shows only a limit number of Mitarbeiter
-for($i=0; $i<$totalItems; $i++)
+$itemsPage = array();
+//$i+$_POST['start'] has to be less then $totalItems so that $items[$i+$_POST['start']] always exist
+for ($i=0; ($i<$_POST['limit']) && ($i+$_POST['start']<$totalItems); $i++)
 {
-	$column[$i] = $items[$i]['Vorname'];
+	$itemsPage[$i] = $items[$i+$_POST['start']];
 }
 
 //The array $data that I'll send as a response (after having changed it into a json object)
 //has to have also the info 'total'=totalItems
-$data['items'] = $items;
+$data['items'] = $itemsPage;
 $data['total'] = $totalItems;
 
 $jsonData = json_encode($data);
