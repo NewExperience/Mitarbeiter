@@ -40,7 +40,9 @@ Ext.application (
                 }
             ],
             //Doesn't directly load the store (it works because the store is created dinamically)
-            autoLoad: false
+            autoLoad: false,
+            //It doesn't sort, but sends infos (as params) to the php to which the store is connected
+            remoteSort: true
         } );
 
         //Definition of the store for the cities listed in the ComboBox

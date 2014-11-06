@@ -17,10 +17,11 @@ $query = "UPDATE Mitarbeiter SET";
 $query .= " Vorname = '" .$_POST['Vorname'] ."',";
 $query .= " Name = '" .$_POST['Name'] ."',";
 $query .= " Geburtsdatum = '" .$date ."'";
-if (!empty($_POST['Geburtsort']))
+if (empty($_POST['Geburtsort']))
 {
-	$query .= ", Geburtsort = '" .$_POST['Geburtsort'] ."'";
+	$_POST['Geburtsort'] = null;
 }
+$query .= ", Geburtsort = '" .$_POST['Geburtsort'] ."'";
 $query .= " WHERE ID = '" .$_POST['ID'] ."'";
 
 //At least one info token from the form has to be the same as the one in the DB
