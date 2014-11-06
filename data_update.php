@@ -24,15 +24,6 @@ if (empty($_POST['Geburtsort']))
 $query .= ", Geburtsort = '" .$_POST['Geburtsort'] ."'";
 $query .= " WHERE ID = '" .$_POST['ID'] ."'";
 
-//At least one info token from the form has to be the same as the one in the DB
-// $query .= " WHERE vorname = '" .$_POST['vorname'] ."'";
-// $query .= " OR name = '" .$_POST['name'] ."'";
-// $query .= " OR geburtsdatum = '" .$date ."'";
-// if (!empty($_POST['ort']))
-// {
-// 	$query .= " OR geburtsort = '" .$_POST['ort'] ."'";
-// }
-
 $result = mysqli_query($con, $query);
 
 //Save the infos token from the DB in the array $data

@@ -58,20 +58,49 @@ if (!empty($_POST['Geburtsort']))
 	$query .= "Geburtsort = '" .$_POST['Geburtsort'] ."'";
 }
 
+// As soon as I click in a column's header I've to order the infos depending on the column clicked ($columnSort)
+// (it's sent in the key 'property' of the array sort)
+// and in the direction sent in the key 'direction' ($directionSort) of the array $sort
+
+//Use the function isset to check if the info 'sort' has been sent as a parameter
+if (isset($_POST['sort']))
+{
+	//Since $_POST['sort'] is a json string I decode it in the associative array $sort
+	$sort = json_decode($_POST['sort'], true);
+	$columnSort = $sort[0]['property'];
+	$directionSort = $sort[0]['direction'];
+	$query .= " ORDER BY " .$columnSort ." " .$directionSort;
+}
+
 $result = mysqli_query($con, $query);
 
-//Save the infos token from the DB in the array $data
-$data = array();
+//Save the infos token from the DB in the array $items
+$items = array();
 while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
 {
-	$data[] =  $row;
+	$items[] =  $row;
 }
 
 mysqli_close($con);
 
+//As a response sent back to index.js I've also to add how many Mitarbeiter there are
+$totalItems = count($items);
+
+//Split all the items regarding the limit parameter,
+//so that each page shows only a limit number of Mitarbeiter
+for($i=0; $i<$totalItems; $i++)
+{
+	$column[$i] = $items[$i]['Vorname'];
+}
+
+//The array $data that I'll send as a response (after having changed it into a json object)
+//has to have also the info 'total'=totalItems
+$data['items'] = $items;
+$data['total'] = $totalItems;
+
 $jsonData = json_encode($data);
 
-//To give back to the file table_data.js the json object $jsonData I've to echo it
+//To give back to the file index.js the json object $jsonData I've to echo it
 echo $jsonData;
 
 ?>

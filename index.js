@@ -5,6 +5,9 @@ Ext.application (
     //This is the function that has to be executed and showed in the window of the html page
     launch : function()
     {
+        //The grid shows 3 Mitarbeiter per page
+        var itemsPerPage = 3;
+
         var myStore = new Ext.data.JsonStore(
         {
             // Store configuration
@@ -15,7 +18,11 @@ Ext.application (
                 url: 'data_search.php',
                 reader:
                 {
-                    type: 'json'
+                    type: 'json',
+                    //The data that has to add are in the array 'items' of the json object
+                    root: 'items',
+                    //Total number of elements in the store (so that can fix the paging)
+                    totalProperty: 'total'
                 },
                 actionMethods:
                 {
@@ -41,6 +48,8 @@ Ext.application (
             ],
             //Doesn't directly load the store (it works because the store is created dinamically)
             autoLoad: false,
+            //It says how many Mitarbeiter has to be shown in each page of the paging
+            pageSize: itemsPerPage,
             //It doesn't sort, but sends infos (as params) to the php to which the store is connected
             remoteSort: true
         } );
@@ -123,6 +132,9 @@ Ext.application (
                         {
                             //Send the values added in the fields of form_search and these are of type FormData
                             var infos = form_search.getValues();
+                            //Add start and limit as params to send how many elements per page has to be shown
+                            infos.start = 0;
+                            infos.limit = itemsPerPage;
                             myStore.load(
                             {
                                 params: infos
@@ -417,6 +429,16 @@ Ext.application (
                         flex: 1
                     }
                 },
+                //Toolbar at the bottom of the grid to show the pages
+                dockedItems:
+                [
+                    {
+                        xtype: 'pagingtoolbar',
+                        store: myStore,
+                        dock: 'bottom',
+                        displayInfo: true
+                    }
+                ],
                 width: 450,
                 height: 300,
                 viewConfig:  //To give red colour to the Mitarbeiter without a Geburtsort added
@@ -426,17 +448,6 @@ Ext.application (
                         if (record.get('Geburtsort')==='')
                         return 'my-red-row';
                     }
-                    //I could write an alert if the Mitarbeiter is too old
-                    // {
-                    //     var datum = record.get('Geburtsdatum');
-                    //     var parts = datum.split('-');
-                    //     var datum_obj = new Date(parts[0], parts[1], parts[0]);
-                    //     console.log('datum_obj',datum_obj);
-                    //     var year = getFullYear(datum_obj);
-                    //     console.log('year',year);
-                    //     if (year<1940)
-                    //     Ext.Msg.alert("Mitarbeiter ist zu alt");
-                    // }
                 },
                 listeners:
                 {
@@ -465,7 +476,14 @@ Ext.application (
                     {
                         click: function(button)
                         {
-                            myStore.load();
+                            myStore.load(
+                            {
+                                params:
+                                {
+                                    start: 0,
+                                    limit: itemsPerPage
+                                }
+                            } );
                         }
                     }
                 }
