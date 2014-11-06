@@ -74,11 +74,19 @@ if (isset($_POST['sort']))
 
 $result = mysqli_query($con, $query);
 
-//Save the infos token from the DB in the array $items
+//Save the infos token from the DB in the array $items,
+//only if these have correct types (I check it using regular expression)
 $items = array();
+$exp_string = '/[a-z]/i';
+$exp_datum_DB = '/\d{4}\-\d{2}\-\d{2}/i';
 while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
 {
-	$items[] =  $row;
+	if ( (preg_match($exp_string, $row['Vorname']) == 1)
+		&& (preg_match($exp_string, $row['Name']) == 1)
+	 	&& (preg_match($exp_datum_DB, $row['Geburtsdatum']) == 1) )
+	 {
+	 	$items[] =  $row;
+	 }
 }
 
 mysqli_close($con);

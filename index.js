@@ -51,7 +51,15 @@ Ext.application (
             //It says how many Mitarbeiter has to be shown in each page of the paging
             pageSize: itemsPerPage,
             //It doesn't sort, but sends infos (as params) to the php to which the store is connected
-            remoteSort: true
+            remoteSort: true,
+            listeners:
+            {
+                //Fix the params of the store with the infos added in the form_search fields
+                beforeload: function(myStore)
+                {
+                    myStore.params = form_search.getForm().getValues();
+                }
+            }
         } );
 
         //Definition of the store for the cities listed in the ComboBox
@@ -236,6 +244,8 @@ Ext.application (
                             var infos = form_add.getForm().getValues();
                             if (control_infos(infos))
                             {
+                                infos.start = 0;
+                                infos.limit = itemsPerPage;
                                 Ext.Ajax.request(
                                 {
                                     url: 'data_add.php',
@@ -244,7 +254,6 @@ Ext.application (
                                     success: function(response, opts)
                                     {
                                         myStore.load();
-                                        // console.log('Store loaded after giving informations', myStore);
                                     },
                                     failure: function(response, opts)
                                     {
@@ -281,7 +290,6 @@ Ext.application (
             items:
             {
                 xtype: 'form',
-                // border: false,
                 items:
                 [
                     {
@@ -330,6 +338,8 @@ Ext.application (
                             var infos = myForm.getForm().getValues();
                             //I add to the infos object the id field
                             infos.ID = myWindow.params.id;
+                            infos.start = 0;
+                            infos.limit = itemsPerPage;
                             Ext.Ajax.request(
                             {
                                 url: 'data_update.php',
@@ -377,7 +387,6 @@ Ext.application (
                 style:
                 {
                     padding: '10px'
-                    // position: 'absolute'
                 }
             },
             items:

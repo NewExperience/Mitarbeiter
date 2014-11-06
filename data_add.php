@@ -35,34 +35,9 @@ if ( (preg_match($exp_string, $_POST['Vorname']) == 1)
 	$result_ins = mysqli_query($con, $query_ins);
 }
 
-//Select the informations from the DB=>they won't contain the new infos if these haven't correct types
-$query_sel = "SELECT ";
-for ($i=0; $i<$col-1; $i++)
-{
-	$query_sel .= $keys[$i] .', ';
-}
-$query_sel .= $keys[$col-1] . " FROM Mitarbeiter";
-
-$result_sel = mysqli_query($con, $query_sel);
-
-//Save the infos token from the DB in the array $data, only if these have correct types
-$data = array();
-$exp_datum_DB = '/\d{4}\-\d{2}\-\d{2}/i';
-while ($row = mysqli_fetch_array($result_sel, MYSQLI_ASSOC))
-{
-	if ( (preg_match($exp_string, $row['Vorname']) == 1)
-		&& (preg_match($exp_string, $row['Name']) == 1)
-	 	&& (preg_match($exp_datum_DB, $row['Geburtsdatum']) == 1) )
-	{
-		$data[] =  $row;
-	}
-}
-
 mysqli_close($con);
 
-$jsonData = json_encode($data);
-
-//To give back to the file billiton.js the json object $jsonData I've to echo it
-echo $jsonData;
+//Connect this file with data_search.php (that's the one sending back to index.js)
+header('Location: '."data_search.php");
 
 ?>

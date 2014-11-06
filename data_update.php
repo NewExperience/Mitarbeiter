@@ -9,19 +9,46 @@ if (mysqli_connect_errno())
 $keys = array ("Vorname", "Name", "Geburtsdatum", "Geburtsort");
 $col = count($keys);
 
-//I want the date written with the format 'YYYY-mm-dd'
-$date = date_create_from_format('m/d/Y', $_POST['Geburtsdatum']);
-$date = date_format($date, 'Y-m-d');
-
 $query = "UPDATE Mitarbeiter SET";
-$query .= " Vorname = '" .$_POST['Vorname'] ."',";
-$query .= " Name = '" .$_POST['Name'] ."',";
-$query .= " Geburtsdatum = '" .$date ."'";
+//Change only those values (for Vorname, Name and Geburtsdatum) that aren't empty,
+//because they have always to be written
+//Variable used to count how many informations I've to update => how many informations aren't empty
+$notEmptyInfo = 0;
+if(!empty($_POST['Vorname']))
+{
+	$query .= " Vorname = '" .$_POST['Vorname'] ."'";
+	$notEmptyInfo++;
+}
+if(!empty($_POST['Name']))
+{
+	if ($notEmptyInfo>0)
+	{
+		$query .= ",";
+	}
+	$query .= " Name = '" .$_POST['Name'] ."'";
+	$notEmptyInfo++;
+}
+if(!empty($_POST['Geburtsdatum']))
+{
+	//I want the date written with the format 'YYYY-mm-dd'
+	$date = date_create_from_format('m/d/Y', $_POST['Geburtsdatum']);
+	$date = date_format($date, 'Y-m-d');
+	if ($notEmptyInfo>0)
+	{
+		$query .= ",";
+	}
+	$query .= " Geburtsdatum = '" .$date ."'";
+	$notEmptyInfo++;
+}
 if (empty($_POST['Geburtsort']))
 {
 	$_POST['Geburtsort'] = null;
 }
-$query .= ", Geburtsort = '" .$_POST['Geburtsort'] ."'";
+if ($notEmptyInfo>0)
+{
+	$query .= ",";
+}
+$query .= " Geburtsort = '" .$_POST['Geburtsort'] ."'";
 $query .= " WHERE ID = '" .$_POST['ID'] ."'";
 
 $result = mysqli_query($con, $query);
