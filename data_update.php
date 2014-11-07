@@ -1,5 +1,6 @@
 <?php
 
+
 $con = mysqli_connect("localhost","root","123456","Federica");
 if (mysqli_connect_errno())
 {
@@ -50,18 +51,33 @@ $query .= " WHERE ID = '" .$_POST['ID'] ."'";
 
 $result = mysqli_query($con, $query);
 
-//Save the infos token from the DB in the array $data
-$data = array();
-while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
-{
-	$data[] =  $row;
-}
-
 mysqli_close($con);
 
-$jsonData = json_encode($data);
+//Connect this file with data_search.php (that's the one sending back to index.js)
+header('Location: '."data_search.php");
 
-//To give back to the file table_data.js the json object $jsonData I've to echo it
-echo $jsonData;
+//Connection with data_search.php using an url
+// $url = "http://localhost/extjs/data_search.php";
+// $ch = curl_init($url);
+// $datatopost = array (
+//     "first" => $_POST['start'],
+//     "last" => $_POST['limit']
+// );
+// $datatopost = json_encode($datatopost);
+// $data = array ('json' => json_encode($datatopost));
+// $curlConfig = array (
+//     CURLOPT_URL            => $url,
+//     CURLOPT_POST           => true,
+//     CURLOPT_RETURNTRANSFER => true,
+//     CURLOPT_POSTFIELDS     => $datatopost,
+//     CURLOPT_HTTPHEADER     => array('Content-Type: application/x-www-form-urlencoded')
+// );
+// curl_setopt_array($ch, $curlConfig);
+// $result = curl_exec($ch);
+// $info = curl_getinfo($ch);
+// curl_close($ch);
+// echo $result;
+
+// $jsonData = json_encode($data);
 
 ?>
