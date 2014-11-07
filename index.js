@@ -66,14 +66,15 @@ Ext.application (
         var comboStore = Ext.create('Ext.data.Store',
         {
             fields: ['abbr', 'city'],
-            data : [
-                {"abbr":"BE", "city":"Berlin"},
-                {"abbr":"ER", "city":"Erice"},
-                {"abbr":"MI", "city":"Milano"},
-                {"abbr":"NY", "city":"New York"},
-                {"abbr":"PA", "city":"Palermo"},
-                {"abbr":"SB", "city":"Saarbruecken"},
-                {"abbr":"VA", "city":"Valencia"}
+            data :
+            [
+                {"abbr": "BE", "city": "Berlin"},
+                {"abbr": "ER", "city": "Erice"},
+                {"abbr": "MI", "city": "Milano"},
+                {"abbr": "NY", "city": "New York"},
+                {"abbr": "PA", "city": "Palermo"},
+                {"abbr": "SB", "city": "Saarbruecken"},
+                {"abbr": "VA", "city": "Valencia"}
             ]
         } );
 
@@ -319,10 +320,24 @@ Ext.application (
                         queryMode: 'remote',
                         displayField: 'city',
                         valueField: 'city',
+                        margin: '15, 10, 10, 15',
                         editable: true,
+                        forceSelection: true,
                         typeAhead: true,
-                        selectOnFocus: true,
-                        margin: '15, 10, 10, 15'
+                        selectOnFocus: false,
+                        allowBlank: true,
+                        //Function to make it possible to set an empty string,
+                        //even if the previous info wasn't empty
+                        beforeBlur: function()
+                        {
+                            var value = this.getRawValue();
+                            if(value=='')
+                            {
+                                this.lastSelection = [];
+                            }
+                            this.doQueryTask.cancel();
+                            this.assertValue();
+                        }
                     }
                 ]
             },

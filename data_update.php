@@ -78,6 +78,4 @@ header('Location: '."data_search.php");
 // curl_close($ch);
 // echo $result;
 
-// $jsonData = json_encode($data);
-
 ?>
