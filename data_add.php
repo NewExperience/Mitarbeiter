@@ -13,7 +13,7 @@ $col = count($keys);
 
 //Control that have been added at least the infos for vorname, name and datum
 //and that vorname and name are strings of letters
-//I do this using regular expressions and the function preg_match_all() that returns an array containing the matches
+//I do this using a regular expression and the function preg_match_all() that returns an array containing the matches
 $exp_string = '/[a-z]/i';
 
 if(empty($_POST['Geburtsort']))

@@ -68,7 +68,7 @@ Ext.application (
             fields: ['value', 'label'],
             data :
             [
-                {"value": null, "label": "Keine Stadt"},
+                {"value": "", "label": "Keine Stadt"},
                 {"value": "Berlin", "label": "Berlin"},
                 {"value": "Erice", "label": "Erice"},
                 {"value": "Milano", "label": "Milano"},
@@ -125,8 +125,7 @@ Ext.application (
                             fieldLabel: 'St&auml;dte',
                             name: 'Geburtsort',
                             store: comboStore,
-                            queryMode: 'local',  //In which way the comboStore is token:
-                                                  //'remote' means that comboStore is loaded dinamically by ComboBox
+                            queryMode: 'local',
                             displayField: 'label', //What is shown in the selection list
                             valueField: 'value',   //How to refer to the elements in the list
                             top: 10,
@@ -134,8 +133,7 @@ Ext.application (
                             forceSelection: true,
                             typeAhead: true,
                             //When it's set a value not in the store this string it's shown
-                            valueNotFoundText: 'Keine Stadt zu suchen'
-                            // value: 'EMPTY'
+                            valueNotFoundText: 'Keine Information'
                         }
                     ]
                 }
@@ -146,31 +144,35 @@ Ext.application (
                     text: 'Auswahl anwenden',
                     listeners:
                     {
+                        //Function to show a message inside the combobox when no city is written
                         mouseover: function(button)
                         {
-                            var form_search = button.up('form');
-                            var container = form_search.down('container');
-                            var vornameField = container.getComponent('text1');
-                            var vornameValue = vornameField.getValue();
-                            var nameField = container.getComponent('text2');
-                            var nameValue = nameField.getValue();
+                            var vorname = form_search.down('container').getComponent('text1').getValue();
+                            var name = form_search.down('container').getComponent('text2').getValue();
                             var combobox = form_search.down('combobox');
                             var ort = combobox.getValue();
-                            var dateField = form_search.down('datefield');
-                            var date = dateField.getValue();
-                            if ( ((vornameValue!='') || (nameValue!='') || (date!=null))
+                            var date = form_search.down('datefield').getValue();
+                            if ( ((vorname!='') || (name!='') || (date!=null))
                                 && (ort==null) )
                             {
-                                combobox.setValue('');
+                                combobox.setValue('null');
                             }
                         },
                         click: function(button)
                         {
+                            // var combobox = form_search.down('combobox');
+                            var ort = form_search.down('combobox').getValue();
                             //Send the values added in the fields of form_search and these are of type FormData
                             var infos = form_search.getValues();
                             //Add start and limit as params to send how many elements per page has to be shown
                             infos.start = 0;
                             infos.limit = itemsPerPage;
+                            //When ort is null it means that the client didn't want to specify the Geburtsort
+                            if (ort==null)
+                            {
+                                //I assign this string to understand the difference in data_search.php
+                                infos.Geburtsort = 'not specified';
+                            }
                             myStore.load(
                             {
                                 params: infos
@@ -262,16 +264,12 @@ Ext.application (
                             fieldLabel: 'St&auml;dte',
                             name: 'Geburtsort',
                             store: comboStore,
-                            queryMode: 'local',  //In which way the comboStore is token:
-                                                  //'remote' means that comboStore is loaded dinamically by ComboBox
+                            queryMode: 'local',
                             displayField: 'label', //What is shown in the selection list
                             valueField: 'value',   //How to refer to the elements in the list
                             editable: true,
                             forceSelection: true,
-                            typeAhead: true,
-                            //When it's set a value not in the store this string it's shown
-                            valueNotFoundText: 'Keine Information'
-                            // value: 'EMPTY'
+                            typeAhead: true
                         }
                     ]
                 }
@@ -282,6 +280,7 @@ Ext.application (
                     text: 'Ok',
                     listeners:
                     {
+                        //Function to show a message inside the combobox when no city is written
                         mouseover: function(button)
                         {
                             var form_add = button.up('form');
@@ -379,20 +378,6 @@ Ext.application (
                         typeAhead: true,
                         //When it's set a value not in the store this string it's shown
                         valueNotFoundText: 'Stadt l&ouml;schen'
-                        // emptyText: 'Stadt l&ouml;schen',
-                        // listeners:
-                        // {
-                        //     beforeselect: function(combo, record)
-                        //     {
-                        //         console.log(record);
-                        //         var ort = combo.getValue();
-                        //         console.log(ort);
-                        //         // if ( (ort!=null) && (record.data.abbr=='EMPTY') )
-                        //         // {
-                        //         //     combo.emptyText = 'Stadt l&ouml;schen';
-                        //         // }
-                        //     }
-                        // }
                         //Function to make it possible to set an empty string,
                         //even if the previous info wasn't empty
                         // beforeBlur: function()
@@ -414,15 +399,17 @@ Ext.application (
                     text: 'Ok',
                     listeners:
                     {
+                        //Function to show a message inside the combobox when the city has been deleted
                         mouseover: function(button)
                         {
                             var previous_ort = myWindow.params.previous_ort;
                             var myForm = myWindow.down('form');
                             var combobox = myForm.down('combobox');
                             var updated_ort = combobox.getValue();
-                            if ( (previous_ort!=null) && (updated_ort==null) )
+                            console.log(updated_ort);
+                            if ( (previous_ort!=null) && (updated_ort=='') )
                             {
-                                combobox.setValue('');
+                                combobox.setValue('null');
                             }
                         },
                         click: function(button)
@@ -573,6 +560,10 @@ Ext.application (
                         var date = record.get('Geburtsdatum');
                         myForm.getForm().findField('Geburtsdatum').setValue(date);
                         var ort = record.get('Geburtsort');
+                        if (ort=='')
+                        {
+                            ort = null;
+                        }
                         myForm.getForm().findField('Geburtsort').setValue(ort);
                         var ID = record.get('ID');
                         //I send to the window as parameters the ID and the ort

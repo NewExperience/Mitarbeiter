@@ -45,7 +45,8 @@ if (!empty($_POST['Geburtsdatum']))
 	$query .= "Geburtsdatum = '" .$date ."'";
 	$whereClause++;
 }
-if (!empty($_POST['Geburtsort']))
+if ($_POST['Geburtsort']!='not specified')  //I want to search also in relation to Geburtsort
+											//(that can also be empty)
 {
 	if ($whereClause>0)  //I've already written other WHERE clauses
 	{
