@@ -12,13 +12,21 @@ $keys = array ("Vorname", "Name", "Geburtsdatum", "Geburtsort");
 $col = count($keys);
 
 //Control that have been added at least the infos for vorname, name and datum
-//and that these have the correct type
-//I do this using regular expressions and the function preg_match() to do the control
+//and that vorname and name are strings of letters
+//I do this using regular expressions and the function preg_match_all() that returns an array containing the matches
 $exp_string = '/[a-z]/i';
-$exp_datum = '/\d{2}\/\d{2}\/\d{4}/i';
-if ( (preg_match($exp_string, $_POST['Vorname']) == 1)
-	&& (preg_match($exp_string, $_POST['Name']) == 1)
-	&& (preg_match($exp_datum, $_POST['Geburtsdatum']) == 1) )
+
+if(empty($_POST['Geburtsort']))
+{
+	$_POST['Geburtsort'] = null;
+}
+
+preg_match_all($exp_string, $_POST['Vorname'], $match_vorname);
+preg_match_all($exp_string, $_POST['Name'], $match_name);
+
+if ( (strlen($_POST['Vorname']) == count($match_vorname[0]))
+	&& (strlen($_POST['Name']) == count($match_name[0]))
+	&& (!empty($_POST['Geburtsdatum'])) )
 {
 	//The date has to be written with the format 'YYYY-mm-dd', so that I can add it into my DB
 	$date = date_create_from_format('m/d/Y', $_POST['Geburtsdatum']);
@@ -36,8 +44,5 @@ if ( (preg_match($exp_string, $_POST['Vorname']) == 1)
 }
 
 mysqli_close($con);
-
-//Connect this file with data_search.php (that's the one sending back to index.js)
-header('Location: '."data_search.php");
 
 ?>

@@ -69,7 +69,7 @@ if (isset($_POST['sort']))
 	$sort = json_decode($_POST['sort'], true);
 	$columnSort = $sort[0]['property'];
 	$directionSort = $sort[0]['direction'];
-	$query .= " ORDER BY " .$columnSort ." " .$directionSort;
+	$query .= " ORDER BY LOWER(" .$columnSort .") " .$directionSort;
 }
 
 $result = mysqli_query($con, $query);
@@ -78,12 +78,13 @@ $result = mysqli_query($con, $query);
 //only if these have correct types (I check it using regular expression)
 $items = array();
 $exp_string = '/[a-z]/i';
-$exp_datum_DB = '/\d{4}\-\d{2}\-\d{2}/i';
 while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC))
 {
-	if ( (preg_match($exp_string, $row['Vorname']) == 1)
-		&& (preg_match($exp_string, $row['Name']) == 1)
-	 	&& (preg_match($exp_datum_DB, $row['Geburtsdatum']) == 1) )
+	preg_match_all($exp_string, $row['Vorname'], $match_vorname);
+	preg_match_all($exp_string, $row['Name'], $match_name);
+	if ( (strlen($row['Vorname']) == count($match_vorname[0]))
+		&& (strlen($row['Name']) == count($match_name[0]))
+		&& (!empty($row['Geburtsdatum'])) )
 	 {
 	 	$items[] =  $row;
 	 }
@@ -97,6 +98,10 @@ $totalItems = count($items);
 //Split all the items regarding the limit parameter,
 //so that each page shows only a limit number of Mitarbeiter
 $itemsPage = array();
+
+// var_dump($_POST['start']);
+// var_dump($_POST['limit']);
+
 //$i+$_POST['start'] has to be less then $totalItems so that $items[$i+$_POST['start']] always exist
 for ($i=0; ($i<$_POST['limit']) && ($i+$_POST['start']<$totalItems); $i++)
 {

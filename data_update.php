@@ -53,9 +53,6 @@ $result = mysqli_query($con, $query);
 
 mysqli_close($con);
 
-//Connect this file with data_search.php (that's the one sending back to index.js)
-header('Location: '."data_search.php");
-
 //Connection with data_search.php using an url
 // $url = "http://localhost/extjs/data_search.php";
 // $ch = curl_init($url);

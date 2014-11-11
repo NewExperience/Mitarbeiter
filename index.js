@@ -65,16 +65,17 @@ Ext.application (
         //Definition of the store for the cities listed in the ComboBox
         var comboStore = Ext.create('Ext.data.Store',
         {
-            fields: ['abbr', 'city'],
+            fields: ['value', 'label'],
             data :
             [
-                {"abbr": "BE", "city": "Berlin"},
-                {"abbr": "ER", "city": "Erice"},
-                {"abbr": "MI", "city": "Milano"},
-                {"abbr": "NY", "city": "New York"},
-                {"abbr": "PA", "city": "Palermo"},
-                {"abbr": "SB", "city": "Saarbruecken"},
-                {"abbr": "VA", "city": "Valencia"}
+                {"value": null, "label": "Keine Stadt"},
+                {"value": "Berlin", "label": "Berlin"},
+                {"value": "Erice", "label": "Erice"},
+                {"value": "Milano", "label": "Milano"},
+                {"value": "New York", "label": "New York"},
+                {"value": "Palermo", "label": "Palermo"},
+                {"value": "Saarbruecken", "label": "Saarbruecken"},
+                {"value": "Valencia", "label": "Valencia"}
             ]
         } );
 
@@ -95,12 +96,14 @@ Ext.application (
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Vorname',
-                            name: 'Vorname'
+                            name: 'Vorname',
+                            itemId: 'text1'
                         },
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Name',
                             name: 'Name',
+                            itemId: 'text2',
                             top: 10
                         }
                     ]
@@ -122,11 +125,17 @@ Ext.application (
                             fieldLabel: 'St&auml;dte',
                             name: 'Geburtsort',
                             store: comboStore,
-                            queryMode: 'remote',  //In which way the comboStore is token:
+                            queryMode: 'local',  //In which way the comboStore is token:
                                                   //'remote' means that comboStore is loaded dinamically by ComboBox
-                            displayField: 'city', //What is shown in the selection list
-                            valueField: 'city',   //How to refer to the elements in the list
-                            top: 10
+                            displayField: 'label', //What is shown in the selection list
+                            valueField: 'value',   //How to refer to the elements in the list
+                            top: 10,
+                            editable: true,
+                            forceSelection: true,
+                            typeAhead: true,
+                            //When it's set a value not in the store this string it's shown
+                            valueNotFoundText: 'Keine Stadt zu suchen'
+                            // value: 'EMPTY'
                         }
                     ]
                 }
@@ -137,6 +146,24 @@ Ext.application (
                     text: 'Auswahl anwenden',
                     listeners:
                     {
+                        mouseover: function(button)
+                        {
+                            var form_search = button.up('form');
+                            var container = form_search.down('container');
+                            var vornameField = container.getComponent('text1');
+                            var vornameValue = vornameField.getValue();
+                            var nameField = container.getComponent('text2');
+                            var nameValue = nameField.getValue();
+                            var combobox = form_search.down('combobox');
+                            var ort = combobox.getValue();
+                            var dateField = form_search.down('datefield');
+                            var date = dateField.getValue();
+                            if ( ((vornameValue!='') || (nameValue!='') || (date!=null))
+                                && (ort==null) )
+                            {
+                                combobox.setValue('');
+                            }
+                        },
                         click: function(button)
                         {
                             //Send the values added in the fields of form_search and these are of type FormData
@@ -148,6 +175,16 @@ Ext.application (
                             {
                                 params: infos
                             } );
+                        }
+                    }
+                },
+                {
+                    text: 'L&ouml;schen',
+                    listeners:
+                    {
+                        click: function(button)
+                        {
+                            form_search.reset();
                         }
                     }
                 }
@@ -225,10 +262,16 @@ Ext.application (
                             fieldLabel: 'St&auml;dte',
                             name: 'Geburtsort',
                             store: comboStore,
-                            queryMode: 'remote',  //In which way the comboStore is token:
+                            queryMode: 'local',  //In which way the comboStore is token:
                                                   //'remote' means that comboStore is loaded dinamically by ComboBox
-                            displayField: 'city', //What is shown in the selection list
-                            valueField: 'city'   //How to refer to the elements in the list
+                            displayField: 'label', //What is shown in the selection list
+                            valueField: 'value',   //How to refer to the elements in the list
+                            editable: true,
+                            forceSelection: true,
+                            typeAhead: true,
+                            //When it's set a value not in the store this string it's shown
+                            valueNotFoundText: 'Keine Information'
+                            // value: 'EMPTY'
                         }
                     ]
                 }
@@ -239,6 +282,16 @@ Ext.application (
                     text: 'Ok',
                     listeners:
                     {
+                        mouseover: function(button)
+                        {
+                            var form_add = button.up('form');
+                            var combobox = form_add.down('combobox');
+                            var ort = combobox.getValue();
+                            if (ort==null)
+                            {
+                                combobox.setValue('');
+                            }
+                        },
                         click: function(button)
                         {
                             //Send the values added in the fields of form_add and these are of type FormData
@@ -317,27 +370,41 @@ Ext.application (
                         fieldLabel: 'St&auml;dte',
                         name: 'Geburtsort',
                         store: comboStore,
-                        queryMode: 'remote',
-                        displayField: 'city',
-                        valueField: 'city',
+                        queryMode: 'local',
+                        displayField: 'label',
+                        valueField: 'value',
                         margin: '15, 10, 10, 15',
                         editable: true,
                         forceSelection: true,
                         typeAhead: true,
-                        selectOnFocus: false,
-                        allowBlank: true,
+                        //When it's set a value not in the store this string it's shown
+                        valueNotFoundText: 'Stadt l&ouml;schen'
+                        // emptyText: 'Stadt l&ouml;schen',
+                        // listeners:
+                        // {
+                        //     beforeselect: function(combo, record)
+                        //     {
+                        //         console.log(record);
+                        //         var ort = combo.getValue();
+                        //         console.log(ort);
+                        //         // if ( (ort!=null) && (record.data.abbr=='EMPTY') )
+                        //         // {
+                        //         //     combo.emptyText = 'Stadt l&ouml;schen';
+                        //         // }
+                        //     }
+                        // }
                         //Function to make it possible to set an empty string,
                         //even if the previous info wasn't empty
-                        beforeBlur: function()
-                        {
-                            var value = this.getRawValue();
-                            if(value=='')
-                            {
-                                this.lastSelection = [];
-                            }
-                            this.doQueryTask.cancel();
-                            this.assertValue();
-                        }
+                        // beforeBlur: function()
+                        // {
+                        //     var value = this.getRawValue();
+                        //     if(value=='')
+                        //     {
+                        //         this.lastSelection = [];
+                        //     }
+                        //     this.doQueryTask.cancel();
+                        //     this.assertValue();
+                        // }
                     }
                 ]
             },
@@ -347,6 +414,17 @@ Ext.application (
                     text: 'Ok',
                     listeners:
                     {
+                        mouseover: function(button)
+                        {
+                            var previous_ort = myWindow.params.previous_ort;
+                            var myForm = myWindow.down('form');
+                            var combobox = myForm.down('combobox');
+                            var updated_ort = combobox.getValue();
+                            if ( (previous_ort!=null) && (updated_ort==null) )
+                            {
+                                combobox.setValue('');
+                            }
+                        },
                         click: function(button)
                         {
                             var myForm = myWindow.down('form');
@@ -369,6 +447,17 @@ Ext.application (
                                     Ext.Msg.alert('Server-side failure with status code ' + response.status);
                                 }
                             } );
+                            myWindow.close();
+                        }
+                    }
+                },
+                {
+                    text: 'Beenden ohne speichern',
+                    listeners:
+                    {
+                        click: function()
+                        {
+                            myWindow.close();
                         }
                     }
                 }
@@ -476,6 +565,7 @@ Ext.application (
                 {
                     itemcontextmenu: function(grid, record, item, index, event)
                     {
+                        event.preventDefault(); //Remove the default window that appears on right clicking the mouse
                         var myForm = myWindow.down('form');
                         myForm.loadRecord(record);
                         //Insertion of the date and of the ort not directly, as for vorname and name
@@ -485,24 +575,15 @@ Ext.application (
                         var ort = record.get('Geburtsort');
                         myForm.getForm().findField('Geburtsort').setValue(ort);
                         var ID = record.get('ID');
-                        //I send this ID to the window as a parameter
-                        myWindow.params = { id: ID };
+                        //I send to the window as parameters the ID and the ort
+                        //(so that in the window I know if the initial ort wasn't empty)
+                        myWindow.params =
+                        {
+                            id: ID,
+                            previous_ort: ort
+                        };
                         myWindow.showAt(event.getXY());
-                    },
-                    //Event that manages the click on a column's title about which I've to sort
-                    //I wouldn't need it because it's done by default, but if I specify
-                    //I can manage this event with the search request
-                    // headerclick: function(column)
-                    // {
-                    //     var infos = form_search.getForm().getValues();
-                    //     //Add start and limit as params to send how many elements per page has to be shown
-                    //     infos.start = 0;
-                    //     infos.limit = itemsPerPage;
-                    //     myStore.load(
-                    //     {
-                    //         params: infos
-                    //     } );
-                    // }
+                    }
                 },
                 fbar:
                 [
