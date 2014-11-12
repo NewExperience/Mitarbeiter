@@ -2,6 +2,7 @@
 
 //Take the content of the table from my DataBase, then I create the array $data
 //and at the end I pass to $table_data.js doing and echo of the json object
+// comment
 $con = mysqli_connect("localhost","root","123456","Federica");
 if (mysqli_connect_errno())
 {
